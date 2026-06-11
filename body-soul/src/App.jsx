@@ -3,16 +3,28 @@ import { supabase } from './lib/supabase'
 import LoginScreen from './components/LoginScreen'
 import HealthForm from './components/HealthForm'
 import MainApp from './components/MainApp'
+import SetPassword from './components/SetPassword'
 import Toast from './components/Toast'
 
 export default function App() {
-  const [screen, setScreen] = useState('login') // 'login' | 'health' | 'app'
+  const [screen, setScreen] = useState('login')
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
   const [toast, setToast] = useState({ show: false, msg: '' })
-  const [isNewUser, setIsNewUser] = useState(false)
 
   useEffect(() => {
+    // Detect invite/recovery links in URL hash
+    const hash = window.location.hash
+    if (hash.includes('type=invite') || hash.includes('type=recovery')) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          setSession(session)
+          setScreen('setpassword')
+        }
+      })
+      return
+    }
+
     // Check existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
@@ -21,14 +33,19 @@ export default function App() {
       }
     })
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || event === 'USER_UPDATED') {
+        setSession(session)
+        if (screen !== 'setpassword') loadProfile(session?.user?.id)
+        return
+      }
       setSession(session)
     })
     return () => subscription.unsubscribe()
   }, [])
 
   const loadProfile = async (userId) => {
+    if (!userId) return
     const { data } = await supabase
       .from('profiles')
       .select('*')
@@ -39,8 +56,6 @@ export default function App() {
       setProfile(data)
       setScreen('app')
     } else {
-      // New user — show health form
-      setIsNewUser(true)
       setScreen('health')
     }
   }
@@ -53,11 +68,16 @@ export default function App() {
   const handleLoginSuccess = (sess, newUser = false) => {
     setSession(sess)
     if (newUser) {
-      setIsNewUser(true)
       setScreen('health')
     } else {
       loadProfile(sess.user.id)
     }
+  }
+
+  const handlePasswordSet = (sess) => {
+    setSession(sess)
+    loadProfile(sess.user.id)
+    showToast('✅ Contraseña creada. ¡Bienvenida!')
   }
 
   const handleHealthComplete = (profileData) => {
@@ -77,6 +97,9 @@ export default function App() {
     <>
       {screen === 'login' && (
         <LoginScreen onSuccess={handleLoginSuccess} showToast={showToast} />
+      )}
+      {screen === 'setpassword' && (
+        <SetPassword session={session} onComplete={handlePasswordSet} showToast={showToast} />
       )}
       {screen === 'health' && (
         <HealthForm session={session} onComplete={handleHealthComplete} showToast={showToast} />
