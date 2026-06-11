@@ -266,6 +266,8 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
               <span style={s.metaItem}>📅 {formatFecha(c.fecha, c.hora)}</span>
               <span style={s.metaItem}>🕐 {c.hora?.slice(0,5)}h</span>
               <span style={s.metaItem}>⏱ {c.duracion_minutos} min</span>
+              {c.profesora && <span style={s.metaItem}>👩‍🏫 {c.profesora}</span>}
+              {c.ubicacion && <span style={s.metaItem}>📍 {c.ubicacion}</span>}
             </div>
             <div style={s.barBg}>
               <div style={{ height: '100%', width: `${pct}%`, background: spotsColor(pct), borderRadius: '4px', transition: 'width 0.5s' }} />

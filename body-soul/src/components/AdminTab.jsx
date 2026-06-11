@@ -8,7 +8,7 @@ const TIPOS_LABEL = { flow: 'Flow', restaurativo: 'Restaurativo', power: 'Power'
 export default function AdminTab({ showToast }) {
   const [stats, setStats] = useState({ alumnas: 0, clasesHoy: 0, enEspera: 0, valoracion: 0 })
   const [alumnas, setAlumnas] = useState([])
-  const [nuevaClase, setNuevaClase] = useState({ nombre: '', tipo: 'flow', fecha: '', hora: '10:00', duracion_minutos: 60, plazas_maximas: 12 })
+  const [nuevaClase, setNuevaClase] = useState({ nombre: '', tipo: 'flow', fecha: '', hora: '10:00', duracion_minutos: 60, plazas_maximas: 12, profesora: 'Ester', ubicacion: 'Sala Body & Soul' })
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState('clases') // 'clases' | 'alumnas'
 
@@ -117,6 +117,16 @@ export default function AdminTab({ showToast }) {
             <div>
               <label style={s.label}>Duración (min)</label>
               <input style={s.input} type="number" value={nuevaClase.duracion_minutos} onChange={e => setNuevaClase({...nuevaClase, duracion_minutos: Number(e.target.value)})} />
+            </div>
+          </div>
+          <div style={s.grid2}>
+            <div>
+              <label style={s.label}>Profesora</label>
+              <input style={s.input} type="text" placeholder="Ej: Ester" value={nuevaClase.profesora} onChange={e => setNuevaClase({...nuevaClase, profesora: e.target.value})} />
+            </div>
+            <div>
+              <label style={s.label}>Ubicación</label>
+              <input style={s.input} type="text" placeholder="Ej: Sala Body & Soul" value={nuevaClase.ubicacion} onChange={e => setNuevaClase({...nuevaClase, ubicacion: e.target.value})} />
             </div>
           </div>
           <button style={s.btnCreate} onClick={crearClase} disabled={loading}>

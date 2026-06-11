@@ -129,7 +129,7 @@ export default function MisClasesTab({ session, clasesUsadas, setClasesUsadas, s
             </div>
             <div style={s.info}>
               <div style={s.className}>{i.clases.nombre}</div>
-              <div style={s.classMeta}>{i.clases.hora?.slice(0,5)}h · {i.clases.duracion_minutos} min</div>
+              <div style={s.classMeta}>{i.clases.hora?.slice(0,5)}h · {i.clases.duracion_minutos} min{i.clases.profesora ? ` · 👩‍🏫 ${i.clases.profesora}` : ''}{i.clases.ubicacion ? ` · 📍 ${i.clases.ubicacion}` : ''}</div>
               <div style={s.reminderBadge}>🔔 Recordatorio 24h antes</div>
             </div>
             <button style={s.btnCancel} onClick={() => cancelar(i.id, i.clase_id)}>Cancelar</button>
