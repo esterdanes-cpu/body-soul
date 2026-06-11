@@ -113,7 +113,7 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
       user_id: session.user.id, clase_id: clase.id, posicion: nextPos
     })
     if (error) { showToast('❌ Ya estás en la lista de espera'); return }
-    showToast('⏳ Apuntada a lista de espera. Te avisaremos si se libera una plaza 📩')
+    showToast('⏳ Apuntado/a a lista de espera. Te avisaremos si se libera una plaza 📩')
     sendEmail('lista_espera', clase)
     loadData()
   }
@@ -256,7 +256,7 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
                     : `${c.inscritas} / ${c.plazas_maximas} plazas${Number(c.plazas_libres) <= 2 ? ` · ¡Solo ${c.plazas_libres} libre!` : ''}`
                   }
                 </div>
-                {isEnrolled && <div style={s.enrolledBadge}>✓ Apuntada</div>}
+                {isEnrolled && <div style={s.enrolledBadge}>✓ Apuntado/a</div>}
                 {isWaiting && <div style={{ ...s.enrolledBadge, background: '#fff3e0', color: '#c77a2a' }}>⏳ En lista de espera</div>}
               </div>
               {isEnrolled ? (

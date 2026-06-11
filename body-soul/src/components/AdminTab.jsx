@@ -77,7 +77,7 @@ export default function AdminTab({ showToast }) {
       <p style={s.sub}>Vista general de Body & Soul</p>
 
       <div style={s.statsGrid}>
-        <div style={s.statBox}><div style={s.statNum}>{stats.alumnas}</div><div style={s.statLabel}>Alumnas activas</div></div>
+        <div style={s.statBox}><div style={s.statNum}>{stats.alumnas}</div><div style={s.statLabel}>Participantes activos</div></div>
         <div style={s.statBox}><div style={s.statNum}>{stats.enEspera}</div><div style={s.statLabel}>En lista de espera</div></div>
         <div style={s.statBox}><div style={s.statNum}>{stats.valoracion}⭐</div><div style={s.statLabel}>Valoración media</div></div>
         <div style={s.statBox}><div style={s.statNum}>{alumnas.filter(a => a.condiciones_fisicas?.length > 0).length}</div><div style={s.statLabel}>Con condiciones</div></div>
@@ -85,7 +85,7 @@ export default function AdminTab({ showToast }) {
 
       <div style={s.tabRow}>
         <button style={s.tabBtn(tab === 'clases')} onClick={() => setTab('clases')}>➕ Nueva clase</button>
-        <button style={s.tabBtn(tab === 'alumnas')} onClick={() => setTab('alumnas')}>👥 Alumnas ({alumnas.length})</button>
+        <button style={s.tabBtn(tab === 'alumnas')} onClick={() => setTab('alumnas')}>👥 Participantes ({alumnas.length})</button>
       </div>
 
       {tab === 'clases' && (
@@ -125,8 +125,8 @@ export default function AdminTab({ showToast }) {
 
       {tab === 'alumnas' && (
         <div style={s.card}>
-          <h3 style={s.h3}>Alumnas registradas</h3>
-          {alumnas.length === 0 && <p style={{ color: '#7a6e68', fontSize: '14px' }}>Aún no hay alumnas registradas</p>}
+          <h3 style={s.h3}>Participantes registrados</h3>
+          {alumnas.length === 0 && <p style={{ color: '#7a6e68', fontSize: '14px' }}>Aún no hay participantes registrados</p>}
           {alumnas.map((a, i) => (
             <div key={a.id} style={{ ...s.alumnaRow, borderBottom: i === alumnas.length - 1 ? 'none' : '1px solid #ede6da' }}>
               <div style={s.avatar(a.avatar_letra, avatarColors[i % avatarColors.length])}>{a.avatar_letra || '?'}</div>

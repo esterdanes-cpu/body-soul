@@ -82,7 +82,7 @@ export default function PerfilTab({ profile, setProfile, session, clasesUsadas, 
       <div style={s.header}>
         <div style={s.bigAvatar}>🌿</div>
         <h2 style={s.name}>{profile?.nombre}</h2>
-        <p style={s.sub}>Alumna desde {new Date(profile?.created_at || Date.now()).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</p>
+        <p style={s.sub}>Participante desde {new Date(profile?.created_at || Date.now()).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</p>
       </div>
 
       {/* Quota ring */}
