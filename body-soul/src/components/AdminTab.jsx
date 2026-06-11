@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import ImportarUsuarios from './ImportarUsuarios'
 
 const TIPOS = ['flow', 'restaurativo', 'power', 'meditacion']
 const TIPOS_LABEL = { flow: 'Flow', restaurativo: 'Restaurativo', power: 'Power', meditacion: 'Meditación' }
@@ -86,6 +87,7 @@ export default function AdminTab({ showToast }) {
       <div style={s.tabRow}>
         <button style={s.tabBtn(tab === 'clases')} onClick={() => setTab('clases')}>➕ Nueva clase</button>
         <button style={s.tabBtn(tab === 'alumnas')} onClick={() => setTab('alumnas')}>👥 Participantes ({alumnas.length})</button>
+        <button style={s.tabBtn(tab === 'importar')} onClick={() => setTab('importar')}>📧 Importar</button>
       </div>
 
       {tab === 'clases' && (
@@ -123,7 +125,9 @@ export default function AdminTab({ showToast }) {
         </div>
       )}
 
-      {tab === 'alumnas' && (
+      {tab === 'importar' && (
+        <ImportarUsuarios profile={{ es_admin: true }} />
+      )}
         <div style={s.card}>
           <h3 style={s.h3}>Participantes registrados</h3>
           {alumnas.length === 0 && <p style={{ color: '#7a6e68', fontSize: '14px' }}>Aún no hay participantes registrados</p>}
