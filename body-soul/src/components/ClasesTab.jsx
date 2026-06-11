@@ -89,9 +89,31 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
   const confirmEnroll = async () => {
     const clase = modal.clase
     setModal(null)
-    const { error } = await supabase.from('inscripciones').upsert({
-      user_id: session.user.id, clase_id: clase.id, estado: 'confirmada'
-    })
+
+    // Check if a cancelled record already exists
+    const { data: existing } = await supabase
+      .from('inscripciones')
+      .select('id, estado')
+      .eq('user_id', session.user.id)
+      .eq('clase_id', clase.id)
+      .single()
+
+    let error
+    if (existing) {
+      // Update existing record to confirmed
+      const { error: updateError } = await supabase
+        .from('inscripciones')
+        .update({ estado: 'confirmada' })
+        .eq('id', existing.id)
+      error = updateError
+    } else {
+      // Insert new record
+      const { error: insertError } = await supabase
+        .from('inscripciones')
+        .insert({ user_id: session.user.id, clase_id: clase.id, estado: 'confirmada' })
+      error = insertError
+    }
+
     if (error) { showToast('❌ Error al inscribirse'); return }
     showToast('✅ Plaza reservada. Recibirás un recordatorio 24h antes 📩')
     sendEmail('confirmacion', clase)
