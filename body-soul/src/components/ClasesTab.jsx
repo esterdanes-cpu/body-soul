@@ -57,7 +57,7 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
   }
 
   const handleEnroll = async (clase) => {
-    if (clasesUsadas >= 2) { showToast('⚠️ Has alcanzado el límite de 2 clases este mes'); return }
+    if (clasesUsadas >= 4) { showToast('⚠️ Has alcanzado el límite de 4 clases este mes'); return }
     if (Number(clase.plazas_libres) <= 0) { setModal({ type: 'waitlist', clase }); return }
     setModal({ type: 'enroll', clase })
   }

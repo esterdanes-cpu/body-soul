@@ -109,7 +109,7 @@ export default function MisClasesTab({ session, clasesUsadas, setClasesUsadas, s
   return (
     <div style={{ animation: 'fadeIn 0.4s ease' }}>
       <h2 style={s.title}>Mis clases</h2>
-      <p style={s.sub}>Este mes: {clasesUsadas} de 2 clases usadas</p>
+      <p style={s.sub}>Este mes: {clasesUsadas} de 4 clases usadas</p>
 
       {proximas.length === 0 && enEspera.length === 0 && (
         <div style={s.emptyState}>

@@ -31,7 +31,7 @@ export default function PerfilTab({ profile, setProfile, session, clasesUsadas, 
     showToast('✅ Ficha actualizada')
   }
 
-  const quotePct = Math.min(100, (clasesUsadas / 2) * 100)
+  const quotePct = Math.min(100, (clasesUsadas / 4) * 100)
   const circum = 251
   const offset = circum - (circum * quotePct / 100)
 
@@ -96,7 +96,7 @@ export default function PerfilTab({ profile, setProfile, session, clasesUsadas, 
           </svg>
           <div style={s.ringText}>
             <div style={s.ringBig}>{clasesUsadas}</div>
-            <div style={s.ringSmall}>de 2</div>
+            <div style={s.ringSmall}>de 4</div>
           </div>
         </div>
         <p style={{ fontSize: '13px', color: '#7a6e68', marginTop: '8px' }}>Clases usadas este mes</p>

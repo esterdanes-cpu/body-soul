@@ -66,7 +66,7 @@ export default function MainApp({ session, profile, setProfile, onLogout, showTo
           <div style={s.logo}>🌿 Body & Soul</div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div style={s.quotaBadge}>
-              Este mes: <strong style={{ color: '#4e6e52' }}>{clasesUsadas}</strong>/2 clases
+              Este mes: <strong style={{ color: '#4e6e52' }}>{clasesUsadas}</strong>/4 clases
             </div>
             <div style={s.avatar} onClick={() => setTab('perfil')}>
               {profile?.avatar_letra || '?'}
