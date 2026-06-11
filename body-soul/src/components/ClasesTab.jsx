@@ -236,7 +236,7 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
         <span style={{ fontSize: '32px' }}>🌿</span>
         <div>
           <div style={{ fontWeight: 500, marginBottom: '2px' }}>¡Hola, {profile?.nombre?.split(' ')[0]}!</div>
-          <div style={{ fontSize: '13px', opacity: 0.85 }}>Tienes {2 - clasesUsadas} clase{2 - clasesUsadas !== 1 ? 's' : ''} disponible{2 - clasesUsadas !== 1 ? 's' : ''} este mes</div>
+          <div style={{ fontSize: '13px', opacity: 0.85 }}>Tienes {4 - clasesUsadas} clase{4 - clasesUsadas !== 1 ? 's' : ''} disponible{4 - clasesUsadas !== 1 ? 's' : ''} este mes</div>
         </div>
       </div>
 
