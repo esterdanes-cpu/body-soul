@@ -62,6 +62,30 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
     setModal({ type: 'enroll', clase })
   }
 
+  const sendEmail = async (tipo, clase) => {
+    try {
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('nombre, email')
+        .eq('id', session.user.id)
+        .single()
+      if (!profileData) return
+      const fecha = new Date(clase.fecha).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })
+      await fetch('/api/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo,
+          email: profileData.email,
+          nombre: profileData.nombre,
+          clase: clase.nombre,
+          fecha,
+          hora: clase.hora?.slice(0, 5) + 'h',
+        }),
+      })
+    } catch (e) { console.log('Email error:', e) }
+  }
+
   const confirmEnroll = async () => {
     const clase = modal.clase
     setModal(null)
@@ -70,6 +94,7 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
     })
     if (error) { showToast('❌ Error al inscribirse'); return }
     showToast('✅ Plaza reservada. Recibirás un recordatorio 24h antes 📩')
+    sendEmail('confirmacion', clase)
     loadData()
   }
 
@@ -89,6 +114,7 @@ export default function ClasesTab({ session, profile, clasesUsadas, setClasesUsa
     })
     if (error) { showToast('❌ Ya estás en la lista de espera'); return }
     showToast('⏳ Apuntada a lista de espera. Te avisaremos si se libera una plaza 📩')
+    sendEmail('lista_espera', clase)
     loadData()
   }
 
