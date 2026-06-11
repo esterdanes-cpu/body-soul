@@ -8,9 +8,10 @@ const TIPOS_LABEL = { flow: 'Flow', restaurativo: 'Restaurativo', power: 'Power'
 export default function AdminTab({ showToast }) {
   const [stats, setStats] = useState({ alumnas: 0, clasesHoy: 0, enEspera: 0, valoracion: 0 })
   const [alumnas, setAlumnas] = useState([])
+  const [clases, setClases] = useState([])
   const [nuevaClase, setNuevaClase] = useState({ nombre: '', tipo: 'flow', fecha: '', hora: '10:00', duracion_minutos: 60, plazas_maximas: 12, profesora: 'Ester', ubicacion: 'Sala Body & Soul' })
   const [loading, setLoading] = useState(false)
-  const [tab, setTab] = useState('clases') // 'clases' | 'alumnas'
+  const [tab, setTab] = useState('clases')
 
   useEffect(() => { loadData() }, [])
 
@@ -22,9 +23,11 @@ export default function AdminTab({ showToast }) {
       supabase.from('encuestas').select('estrellas'),
     ])
     const { data: alumnasList } = await supabase.from('profiles').select('*').eq('es_admin', false).order('created_at', { ascending: false })
+    const { data: clasesList } = await supabase.from('clases').select('*').order('fecha', { ascending: true })
     const avg = encuestaData?.length > 0 ? (encuestaData.reduce((a, b) => a + b.estrellas, 0) / encuestaData.length).toFixed(1) : '—'
     setStats({ alumnas: alumnaCount || 0, enEspera: esperaCount || 0, valoracion: avg })
     setAlumnas(alumnasList || [])
+    setClases(clasesList || [])
   }
 
   const crearClase = async () => {
@@ -34,7 +37,15 @@ export default function AdminTab({ showToast }) {
     setLoading(false)
     if (error) { showToast('❌ Error: ' + error.message); return }
     showToast('✅ Clase creada correctamente')
-    setNuevaClase({ nombre: '', tipo: 'flow', fecha: '', hora: '10:00', duracion_minutos: 60, plazas_maximas: 12 })
+    setNuevaClase({ nombre: '', tipo: 'flow', fecha: '', hora: '10:00', duracion_minutos: 60, plazas_maximas: 12, profesora: 'Ester', ubicacion: 'Sala Body & Soul' })
+    loadData()
+  }
+
+  const eliminarClase = async (id, nombre) => {
+    if (!window.confirm(`¿Segura que quieres eliminar "${nombre}"? Se eliminarán también todas sus inscripciones.`)) return
+    const { error } = await supabase.from('clases').delete().eq('id', id)
+    if (error) { showToast('❌ Error al eliminar'); return }
+    showToast('🗑️ Clase eliminada')
     loadData()
   }
 
@@ -91,6 +102,26 @@ export default function AdminTab({ showToast }) {
       </div>
 
       {tab === 'clases' && (
+        <>
+        <div style={s.card}>
+          <h3 style={s.h3}>Clases programadas</h3>
+          {clases.length === 0 && <p style={{ color: '#7a6e68', fontSize: '14px' }}>No hay clases programadas</p>}
+          {clases.map((c, i) => (
+            <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: i === clases.length - 1 ? 'none' : '1px solid #ede6da' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '14px', fontWeight: 500 }}>{c.nombre}</div>
+                <div style={{ fontSize: '12px', color: '#7a6e68' }}>
+                  📅 {new Date(c.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })} · 🕐 {c.hora?.slice(0,5)}h · {c.plazas_maximas} plazas
+                </div>
+                {c.profesora && <div style={{ fontSize: '12px', color: '#7a6e68' }}>👩‍🏫 {c.profesora}{c.ubicacion ? ` · 📍 ${c.ubicacion}` : ''}</div>}
+              </div>
+              <button onClick={() => eliminarClase(c.id, c.nombre)}
+                style={{ padding: '6px 12px', background: 'transparent', border: '1.5px solid #c47b6a', color: '#c47b6a', borderRadius: '8px', cursor: 'pointer', fontSize: '12px', whiteSpace: 'nowrap' }}>
+                🗑️ Eliminar
+              </button>
+            </div>
+          ))}
+        </div>
         <div style={s.card}>
           <h3 style={s.h3}>Nueva clase</h3>
           <label style={s.label}>Nombre de la clase</label>
@@ -133,6 +164,7 @@ export default function AdminTab({ showToast }) {
             {loading ? 'Creando...' : '✅ Crear clase'}
           </button>
         </div>
+        </>
       )}
 
       {tab === 'importar' && (
