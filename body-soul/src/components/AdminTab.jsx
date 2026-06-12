@@ -92,7 +92,7 @@ export default function AdminTab({ showToast }) {
         <div style={s.statBox}><div style={s.statNum}>{stats.alumnas}</div><div style={s.statLabel}>Participantes activos</div></div>
         <div style={s.statBox}><div style={s.statNum}>{stats.enEspera}</div><div style={s.statLabel}>En lista de espera</div></div>
         <div style={s.statBox}><div style={s.statNum}>{stats.valoracion}⭐</div><div style={s.statLabel}>Valoración media</div></div>
-        <div style={s.statBox}><div style={s.statNum}>{alumnas.filter(a => a.condiciones_fisicas?.length > 0).length}</div><div style={s.statLabel}>Con condiciones</div></div>
+        <div style={s.statBox}><div style={s.statNum}>{alumnas.filter(a => a.condiciones_fisicas?.some(c => c !== 'Ninguna') || a.enfermedades?.some(e => e !== 'Ninguna')).length}</div><div style={s.statLabel}>Con condiciones</div></div>
       </div>
 
       <div style={s.tabRow}>
